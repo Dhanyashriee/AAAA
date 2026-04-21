@@ -1,0 +1,347 @@
+Exp 1:
+Here’s how to actually do each step (with explanation + what’s happening behind the scenes) so you understand—not just copy commands.
+________________________________________
+🧩 Step 1 – Initialize repo & first commit
+👉 What you’re doing
+You are creating a local Git repository and saving your first version (commit).
+Commands:
+git init myproject
+cd myproject
+✔ Creates a folder + initializes Git (adds .git hidden folder)
+________________________________________
+echo "# My DevOps Project" > README.md
+✔ Creates a file called README.md
+________________________________________
+git add README.md
+✔ Moves file to staging area (ready to commit)
+________________________________________
+git commit -m "Initial commit: add README"
+✔ Saves a snapshot (version) of your project
+________________________________________
+🧠 Concept (important)
+•	Working directory → your files 
+•	Staging area → selected files 
+•	Repository → committed history 
+________________________________________
+🌿 Step 2 – Create a branch & make changes
+👉 What you’re doing
+You are creating a separate line of development (branch).
+________________________________________
+git checkout -b feature/hello
+✔ Creates + switches to new branch
+________________________________________
+echo "Hello from feature branch" > hello.txt
+git add hello.txt
+git commit -m "feat: add hello.txt"
+✔ You added a new file in this branch
+✔ This commit exists only in feature/hello branch
+________________________________________
+🧠 Concept
+•	Branch = independent version of code 
+•	main → stable 
+•	feature/... → new changes 
+________________________________________
+☁️ Step 3 – Push to GitHub & create Pull Request
+👉 First, create repo on GitHub
+Go to 👉 GitHub
+Create repo: myproject
+________________________________________
+👉 Connect local repo to GitHub
+git remote add origin https://github.com/<username>/myproject.git
+✔ origin = nickname for your remote repo
+________________________________________
+👉 Push branch
+git push -u origin feature/hello
+✔ Uploads your branch to GitHub
+✔ -u sets upstream (so next time just git push works)
+________________________________________
+👉 Create Pull Request (PR)
+On GitHub:
+•	Click Compare & pull request 
+•	Add description 
+•	Click Create pull request 
+________________________________________
+🧠 Concept
+Pull Request =
+👉 “Please merge my feature into main”
+________________________________________
+🔀 Step 4 – Merge & push main
+Now you combine your feature into main.
+________________________________________
+git checkout main
+✔ Switch back to main branch
+________________________________________
+git merge feature/hello
+✔ Combines feature branch into main
+________________________________________
+git push origin main
+✔ Updates GitHub main branch
+________________________________________
+📊 View commit history (very important)
+git log --oneline --graph
+Output looks like:
+* abc123 feat: add hello.txt
+* def456 Initial commit
+✅ FIX (Choose ONE method)
+________________________________________
+🟢 Method 1 (Best & easiest) – Allow unrelated histories
+Run this in your terminal:
+git pull origin main --allow-unrelated-histories
+👉 Then:
+git checkout main
+git merge feature/hello
+git push origin main
+✔ Now both histories will combine
+✔ Pull request will work
+________________________________________
+🟢 Method 2 – Create PR directly (quick fix)
+Your terminal already gave this link:
+👉 Open:
+https://github.com/Dhanyashriee/myproject/pull/new/feature/hello
+✔ Click:
+•	Create Pull Request 
+•	Then click Merge 
+________________________________________
+🟢 Method 3 (Clean method – recommended for learning)
+Start properly from GitHub:
+git clone https://github.com/Dhanyashriee/myproject.git
+cd myproject
+
+git checkout -b feature/hello
+# create file again
+git add .
+git commit -m "feat: add hello.txt"
+git push origin feature/hello
+✔ This ensures same history
+________________________________________
+🔍 What you did RIGHT (important)
+From your terminal:
+✔ git add ✅
+✔ git commit ✅
+✔ git push ✅
+✔ branch created ✅
+👉 So your understanding is correct — just a history mismatch issue.
+________________________________________
+🧠 Simple understanding
+Think like this:
+•	GitHub main = 📘 Book 1 
+•	Your branch = 📕 Book 2 
+Git says:
+👉 “These books are unrelated”
+So you must combine them first
+________________________________________
+🚀 What you should do now (simple steps)
+👉 Do this:
+git pull origin main --allow-unrelated-histories
+Then go to GitHub → refresh → create PR
+________________________________________
+If you want, I can:
+✅ Draw branch diagram (very useful for exams)
+✅ Give viva questions on Git (they ask this exact error!)
+✅ Show step-by-step screenshots for full workflow
+ 
+Good — now you’ve hit the next real Git concept: merge conflict. This is expected, not an error you “broke” something with.
+Let’s fix it cleanly 👇
+________________________________________
+❗ What happened (from your screenshot)
+You ran:
+git pull origin main --allow-unrelated-histories
+✔ Git tried to merge
+❌ Conflict occurred in README.md
+Now Git is saying:
+“You must resolve conflict before doing anything else”
+________________________________________
+🧠 Why conflict happened
+Both places changed the same file:
+•	GitHub → README.md 
+•	Your local → README.md 
+👉 Git doesn’t know which one to keep
+________________________________________
+🔧 Step-by-step FIX (do exactly this)
+________________________________________
+🟢 Step 1 – Open the file
+Open README.md in:
+•	Notepad / VS Code / any editor 
+You’ll see something like:
+<<<<<<< HEAD
+# My DevOps Project
+=======
+# My DevOps Project (from GitHub)
+>>>>>>> main
+________________________________________
+🟢 Step 2 – Fix manually
+👉 Choose what you want:
+Example (clean version):
+# My DevOps Project
+❗ Remove:
+•	<<<<<<< 
+•	======= 
+•	>>>>>>> 
+________________________________________
+🟢 Step 3 – Mark conflict as resolved
+git add README.md
+________________________________________
+🟢 Step 4 – Commit merge
+git commit -m "fix: resolve merge conflict in README"
+________________________________________
+🟢 Step 5 – Now switch branch properly
+git checkout main
+________________________________________
+🟢 Step 6 – Merge feature branch
+git merge feature/hello
+________________________________________
+🟢 Step 7 – Push to GitHub
+git push origin main
+________________________________________
+❗ About your errors (explained simply)
+🔴 Error:
+README.md: needs merge
+👉 Means conflict not solved yet
+________________________________________
+🔴 Error:
+you need to resolve your current index first
+👉 Git is blocked until conflict is fixed
+________________________________________
+🔴 Error:
+src refspec main does not match any
+👉 Happens because merge wasn’t completed
+________________________________________
+🧠 Important concept (exam/viva question)
+👉 What is merge conflict?
+When two branches modify the same file/line and Git cannot decide automatically.
+________________________________________
+🚀 Quick shortcut (if you want EASY way)
+If you don’t care about README conflict:
+git merge --abort
+git pull origin main --allow-unrelated-histories
+Then fix again properly.
+________________________________________
+🎯 What you should do NOW
+👉 Just do:
+1.	Open README.md 
+2.	Remove conflict markers 
+3.	Run: 
+git add README.md
+git commit -m "resolved conflict"
+🔧 What you will see inside
+You’ll see something like:
+<<<<<<< HEAD
+# My DevOps Project
+=======
+# My DevOps Project
+>>>>>>> main
+________________________________________
+✏️ What you should do
+👉 Delete ALL symbols:
+•	<<<<<<< 
+•	======= 
+•	>>>>>>> 
+Keep only:
+# My DevOps Project
+________________________________________
+💾 Save the file
+Then go back to terminal and run:
+git add README.md
+git commit -m "resolved merge conflict"
+________________________________________
+🧠 Simple understanding
+•	Opening file = normal text editing 
+•	Conflict markers = Git asking YOU to decide 
+•	You fix → Git continues 
+________________________________________
+If you want, I can:
+✅ Show exactly how it looks before & after fixing
+✅ Help you complete full merge + PR step
+✅ Give shortcut commands for future conflicts
+ 
+Nice—that commit means you successfully resolved the merge conflict 👍
+Now just finish the workflow (2–3 more commands).
+________________________________________
+✅ What you’ve done so far
+✔ Conflict fixed
+✔ git add README.md
+✔ git commit
+👉 You are currently on feature/hello branch
+________________________________________
+🚀 Next steps (finish merge)
+🟢 Step 1 – Go to main branch
+git checkout main
+________________________________________
+🟢 Step 2 – Merge your feature branch
+git merge feature/hello
+✔ Now changes from feature/hello go into main
+________________________________________
+🟢 Step 3 – Push to GitHub
+git push origin main
+________________________________________
+🌐 Final step on GitHub
+Go to your repo:
+•	You should now see updated files 
+•	PR may auto-close or already merged 
+________________________________________
+🧠 What just happened (important)
+You handled a real Git scenario:
+1.	Two histories existed 
+2.	Git couldn’t merge automatically 
+3.	You manually resolved conflict 
+4.	Then completed merge 
+👉 This is exactly what happens in real projects
+________________________________________
+🔍 Optional (check history)
+git log --oneline --graph
+You’ll see:
+* merge commit
+* feat: add hello.txt
+* initial commit
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+Perform Git operations to commit, push, merge branches, and create a pull request on GitHub.
+Git GitHub
+
+
+Step 1 – Initialise repo & first commit
+
+bashcopy
+# Initialise a local repository
+git init myproject
+cd myproject
+
+# Create a file and make the first commit
+echo "# My DevOps Project" > README.md
+git add README.md
+git commit -m "Initial commit: add README"
+
+Step 2 – Create a feature branch & make changes
+
+bashcopy
+git checkout -b feature/hello
+
+echo "Hello from feature branch" > hello.txt
+git add hello.txt
+git commit -m "feat: add hello.txt"
+
+Step 3 – Push to GitHub & open Pull Request
+
+bashcopy
+# Connect to remote (first time only)
+git remote add origin https://github.com/<username>/myproject.git
+git push -u origin feature/hello
+ℹ️On GitHub → go to your repo → click Compare & pull request → add a description → click Create pull request.
+
+Step 4 – Merge & push main
+
+bashcopy
+git checkout main
+git merge feature/hello
+git push origin main
+git log --oneline --graph
