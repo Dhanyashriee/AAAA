@@ -1,0 +1,801 @@
+Nice—this one is simpler than Docker, but important for concepts. I’ll guide you step-by-step so you can run + demonstrate + explain it confidently.
+
+🧪 Q03 — Monolithic Flask Application (Student CRUD)
+🎯 What you’re building
+A monolithic app = everything in ONE file:
+
+
+API routes
+
+
+business logic
+
+
+data storage
+
+
+👉 All inside app.py
+
+📁 Step 1 — Create project folder
+mkdir monolithic-appcd monolithic-app
+
+🧾 Step 2 — Create app.py
+Paste this:
+from flask import Flask, request, jsonifyapp = Flask(__name__)students = {}next_id = 1@app.route('/students', methods=['GET'])def get_students():    return jsonify(list(students.values()))@app.route('/students', methods=['POST'])def add_student():    global next_id    data = request.get_json()    student = {'id': next_id, 'name': data['name'], 'roll': data['roll']}    students[next_id] = student    next_id += 1    return jsonify(student), 201@app.route('/students/<int:sid>', methods=['DELETE'])def delete_student(sid):    students.pop(sid, None)    return jsonify({'msg': 'Deleted'})if __name__ == '__main__':    app.run(debug=True)
+
+⚙️ Step 3 — Install Flask
+pip install flask
+
+▶️ Step 4 — Run application
+python app.py
+You’ll see:
+Running on http://127.0.0.1:5000
+
+🧪 Step 5 — Test using curl
+
+➕ Add student
+curl -X POST http://localhost:5000/students \-H "Content-Type: application/json" \-d "{\"name\":\"Alice\",\"roll\":\"CS001\"}"
+✅ Output:
+{"id":1,"name":"Alice","roll":"CS001"}
+
+📋 Get all students
+curl http://localhost:5000/students
+✅ Output:
+[  {"id":1,"name":"Alice","roll":"CS001"}]
+
+❌ Delete student
+curl -X DELETE http://localhost:5000/students/1
+✅ Output:
+{"msg":"Deleted"}
+
+🧠 What makes this “Monolithic”
+👉 Everything is in ONE place:
+
+
+Routes
+
+
+Logic
+
+
+Data (dictionary)
+
+
+No separation → single deployable unit
+
+📊 Monolithic Architecture (visual idea)
+5
+
+🎯 Output (write in record)
+
+
+Flask app successfully developed
+
+
+CRUD operations performed
+
+
+API tested using curl
+
+
+Output displayed student data in JSON format
+
+
+
+🧠 Viva Questions (IMPORTANT)
+❓ What is monolithic architecture?
+👉 Single application where all components are tightly coupled
+
+❓ Advantages?
+
+
+Simple to build
+
+
+Easy to deploy
+
+
+
+❓ Disadvantages?
+
+
+Hard to scale
+
+
+Hard to maintain
+
+
+
+❓ Difference from microservices?
+
+
+Monolithic → single unit
+
+
+Microservices → multiple independent services
+
+
+
+⚠️ Common Errors
+❌ curl not recognized
+👉 Use:
+
+
+Git Bash
+
+
+Or Postman (GUI)
+
+
+
+❌ Flask not found
+pip install flask
+
+🚀 If you want next
+We can go to:
+👉 Microservices version of this (very important continuation)
+👉 OR Kubernetes deployment (advanced)
+Just tell 👍You didn’t do anything wrong with Flask — the issue is PowerShell, not your code.
+👉 In Windows PowerShell, curl is NOT real curl
+It is actually Invoke-WebRequest, so -X, -H, -d don’t work ❌
+
+❗ Your error (why it happened)
+From your screenshot:
+Invoke-WebRequest : A parameter cannot be found that matches parameter name 'X'
+👉 Means:
+PowerShell is interpreting curl differently
+
+✅ FIX (Choose one method)
+
+🟢 Method 1 — Use Git Bash (BEST & easiest)
+Open:
+👉 Right-click → Git Bash Here
+Then run EXACT same command:
+curl -X POST http://localhost:5000/students \-H "Content-Type: application/json" \-d '{"name":"Alice","roll":"CS001"}'
+✔ This will work perfectly
+
+🟢 Method 2 — Use PowerShell correct command
+Use this instead:
+Invoke-RestMethod -Uri "http://localhost:5000/students" `-Method POST `-Headers @{ "Content-Type" = "application/json" } `-Body '{"name":"Alice","roll":"CS001"}'
+✔ This is PowerShell version of curl
+
+🟢 Method 3 — Use real curl in PowerShell
+Use curl.exe instead of curl:
+curl.exe -X POST http://localhost:5000/students -H "Content-Type: application/json" -d "{\"name\":\"Alice\",\"roll\":\"CS001\"}"
+✔ Works because it bypasses PowerShell alias
+
+🧪 Then test GET
+curl http://localhost:5000/students
+
+🧠 Simple understanding
+ToolWorks with curl?PowerShell ❌No (alias issue)Git Bash ✅YesCMD ⚠️Sometimescurl.exe ✅Yes
+
+🎯 What you should do NOW
+👉 Easiest:
+
+
+Open Git Bash
+
+
+Run curl command again
+
+
+
+🚀 Alternative (VERY EASY)
+Use browser:
+👉 Open:
+http://localhost:5000/students
+✔ Shows list (GET request)
+
+🎓 Viva tip
+👉 If asked:
+Q: Why curl didn’t work in PowerShell?
+✔ “Because PowerShell aliases curl to Invoke-WebRequest which uses different parameters”
+
+If you want next:
+✅ Postman method (GUI, very easy)
+✅ Microservices version of this app
+✅ Kubernetes deployment of this app
+Just tell 👍You’re very close—this is just a small mismatch + PowerShell quirks. Let’s fix it cleanly.
+
+❗ Why you got 404 Not Found
+404 means:
+👉 Your Flask app is not matching the URL you called
+In your code, you have:
+@app.route('/students', methods=['POST'])
+So this must be true:
+
+
+App is running
+
+
+URL is exactly /students
+
+
+Method is POST
+
+
+
+🔍 First check (IMPORTANT)
+Make sure your Flask app is still running:
+python app.py
+You should see:
+Running on http://127.0.0.1:5000
+👉 If it’s not running → you will get 404
+
+🟢 Correct PowerShell command (copy EXACTLY)
+Use this (no backslashes, no multi-line issues):
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students" -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"name":"Alice","roll":"CS001"}'
+
+🟢 Then check GET
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students"
+
+🧠 Why your previous command failed
+❌ Issue 1 – Line breaks
+PowerShell doesn’t like:
+\
+
+❌ Issue 2 – curl alias
+PowerShell treats curl differently
+
+❌ Issue 3 – URL mismatch
+Sometimes:
+localhost → 127.0.0.1 works better
+
+🟢 BEST EASY METHOD (recommended)
+Use Git Bash instead:
+curl -X POST http://localhost:5000/students -H "Content-Type: application/json" -d '{"name":"Alice","roll":"CS001"}'
+
+🟢 EVEN EASIER (for demo)
+Use browser for GET:
+👉 Open:
+http://127.0.0.1:5000/students
+
+⚠️ If still 404
+Check your code:
+❗ Make sure this line exists:
+@app.route('/students', methods=['POST'])
+
+🚀 Quick debug checklist
+✔ Flask running
+✔ URL correct
+✔ Port = 5000
+✔ No typo (/students, not /student)
+✔ Using correct method (POST vs GET)
+
+🎯 What you should do now
+👉 Run app again
+👉 Copy my exact PowerShell command
+👉 Test GET after POST
+
+If it still fails, send me:
+
+
+your app.py
+
+
+full terminal output
+
+
+I’ll fix it instantly 👍You’ve uncovered the real issue now—and it’s not PowerShell anymore.
+
+❗ ROOT PROBLEM
+Your browser shows:
+Hello from Dockerised Flask!
+👉 That means:
+⚠️ Your Docker container from previous experiment is still running
+So:
+
+
+Port 5000 is occupied by Docker
+
+
+Your monolithic app is NOT actually running on that port
+
+
+👉 That’s why:
+❌ /students → 404
+✔ / → shows Docker app
+
+🔥 FIX (very important)
+🟢 Step 1 — Stop Docker container
+Run:
+docker ps
+You’ll see something like:
+CONTAINER ID   IMAGEabc123         dhanyashriee/flask-app
+
+🛑 Stop it:
+docker stop <container_id>
+Example:
+docker stop d30c5723...
+
+🟢 Step 2 — Run your monolithic app again
+python app.py
+Now you should see:
+Running on http://127.0.0.1:5000
+
+🟢 Step 3 — Test in browser
+Open:
+http://127.0.0.1:5000/students
+👉 Now it should show:
+[]
+
+🟢 Step 4 — Test POST (PowerShell)
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students" -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"name":"Alice","roll":"CS001"}'
+
+🟢 Step 5 — Check GET again
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students"
+👉 Output:
+[  {"id":1,"name":"Alice","roll":"CS001"}]
+
+🧠 Why this happened (important concept)
+👉 Ports cannot be shared
+
+
+Docker container → using port 5000
+
+
+Flask app → also wants port 5000
+
+
+👉 Conflict → only one works
+
+🧪 Alternative (if you don’t want to stop Docker)
+Run Flask on another port:
+app.run(debug=True, port=5001)
+Then open:
+http://127.0.0.1:5001/students
+
+🎯 What you learned (VERY important)
+
+
+Port conflicts
+
+
+Docker vs local app interaction
+
+
+Debugging real-world issue
+
+
+
+🚀 What to do now
+👉 Stop container
+👉 Run Flask app
+👉 Test again
+
+If you want next:
+✅ Microservices version of this app
+✅ Kubernetes deployment
+✅ Viva questions (they WILL ask this scenario)
+Just tell 👍Good—you found the exact cause now 👍
+
+❗ Problem confirmed from your screenshot
+You still have this running:
+dhanyashriee/flask-app → 0.0.0.0:5000->5000
+👉 That Docker container is occupying port 5000
+So:
+
+
+Your monolithic Flask app cannot use port 5000
+
+
+Requests go to Docker app → hence wrong response / 404
+
+
+
+🔥 FIX (do this now)
+🛑 Step 1 — Stop Docker container
+From your output:
+CONTAINER ID: d30c57233106
+Run:
+docker stop d30c57233106
+
+🟢 Step 2 — Verify it stopped
+docker ps
+👉 Now container list should NOT show port 5000
+
+▶️ Step 3 — Run your Flask app
+python app.py
+
+🌐 Step 4 — Test in browser
+Open:
+http://127.0.0.1:5000/students
+✔ Expected:
+[]
+
+🟢 Step 5 — Test POST (PowerShell)
+Now run (single line, no enter breaks):
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students" -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"name":"Alice","roll":"CS001"}'
+
+🟢 Step 6 — Check GET
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students"
+✔ Output:
+[  {"id":1,"name":"Alice","roll":"CS001"}]
+
+🧠 What you just learned (VERY important)
+👉 Port conflict problem
+AppPortDocker container5000Flask app5000
+❌ Cannot share → conflict
+
+🚀 Alternative (if you don’t want to stop Docker)
+Change Flask port:
+app.run(debug=True, port=5001)
+Then open:
+http://127.0.0.1:5001/students
+
+🎯 Final check
+If this works:
+✔ Your monolithic app is correct
+✔ Your API is working
+✔ Your experiment is SUCCESS
+
+If anything still fails, send me:
+
+
+updated screenshot
+
+
+output of docker ps
+
+
+I’ll fix it instantly 👍Good—now we’re at the final issue, and it’s simple 👍
+
+❗ Current problem
+Browser shows:
+ERR_CONNECTION_REFUSED
+👉 That means:
+Your Flask app is NOT running
+
+🔍 From your screenshot
+You ran:
+python app.py
+BUT ❌ no output like:
+Running on http://127.0.0.1:5000
+👉 So app didn’t actually start
+
+🔥 FIX STEP-BY-STEP
+
+🟢 Step 1 — Run properly
+In terminal, run:
+python app.py
+
+🟢 Step 2 — VERY IMPORTANT
+After running, you MUST see this:
+* Running on http://127.0.0.1:5000* Debug mode: on
+👉 If you don’t see this → app is not running
+
+🟢 Step 3 — Keep terminal OPEN
+⚠️ Don’t close terminal
+⚠️ Don’t run new command in same window
+
+🟢 Step 4 — Open browser
+http://127.0.0.1:5000/students
+
+❗ If still not working
+
+🔍 Check your app.py
+Make sure LAST lines are EXACT:
+if __name__ == '__main__':    app.run(debug=True)
+
+🔍 Check errors in terminal
+After running python app.py, do you see:
+
+
+any red error?
+
+
+syntax error?
+
+
+👉 If yes → send screenshot
+
+🔍 Check port manually
+Run:
+netstat -ano | findstr :5000
+👉 If nothing → app not running
+
+🧠 What happened here
+Earlier:
+✔ Docker was blocking port
+Now:
+✔ Docker stopped
+❌ But Flask not started
+
+🚀 Quick test (alternate)
+Change port to avoid confusion:
+app.run(debug=True, port=5001)
+Then open:
+http://127.0.0.1:5001/students
+
+🎯 What you should do NOW
+👉 Run python app.py
+👉 Check for "Running on..." message
+👉 Then open browser
+
+⚠️ If still stuck
+Send me:
+
+
+full app.py
+
+
+terminal output after running
+
+
+I’ll fix it immediately 👍Now the issue is clear—and it’s not Docker anymore 👍
+
+❗ REAL PROBLEM
+When you run:
+python app.py
+👉 Nothing happens (no output)
+👉 That means your app.py is not executing correctly
+
+🔥 Most likely cause
+👉 You are NOT inside the correct folder
+👉 OR app.py is missing / empty / wrong
+
+✅ FIX STEP-BY-STEP
+
+🟢 Step 1 — Check file exists
+Run:
+dir
+👉 You MUST see:
+app.py
+
+🟢 Step 2 — Open file and verify
+Open app.py and make sure it contains EXACT code:
+from flask import Flask, request, jsonifyapp = Flask(__name__)students = {}next_id = 1@app.route('/students', methods=['GET'])def get_students():    return jsonify(list(students.values()))@app.route('/students', methods=['POST'])def add_student():    global next_id    data = request.get_json()    student = {'id': next_id, 'name': data['name'], 'roll': data['roll']}    students[next_id] = student    next_id += 1    return jsonify(student), 201@app.route('/students/<int:sid>', methods=['DELETE'])def delete_student(sid):    students.pop(sid, None)    return jsonify({'msg': 'Deleted'})if __name__ == '__main__':    app.run(debug=True)
+
+🟢 Step 3 — Run correctly
+python app.py
+
+🟢 Step 4 — EXPECT THIS OUTPUT
+* Running on http://127.0.0.1:5000
+👉 If you don’t see this → something is wrong in file
+
+❗ If still nothing happens
+Run this:
+python --version
+👉 Make sure Python is working
+
+🔍 Debug test (IMPORTANT)
+Add this at top of file:
+print("App started")
+Then run:
+python app.py
+👉 If NOTHING prints → file not running
+
+🟢 Alternative (safe fix)
+Run using:
+python -m flask run
+
+🚀 Quick workaround (guaranteed working)
+Rename file to:
+main.py
+Then run:
+python main.py
+
+🎯 What your situation means
+SymptomMeaningNo outputapp not runningNo errorfile not executedNo port openFlask not started
+
+⚠️ Most common mistake (very likely yours)
+👉 You created file in VS Code but not saved
+👉 Or wrong folder opened
+
+🎯 Do this NOW
+
+
+Run dir
+
+
+Confirm app.py
+
+
+Open file → paste correct code
+
+
+Save file
+
+
+Run python app.py
+
+
+
+If still stuck, send:
+
+
+screenshot of app.py
+
+
+output of dir
+
+
+I’ll fix it instantly 👍Good—now everything is actually working 👍
+This is the last small confusion, not an error.
+
+❗ Why you see 404 Not Found
+You opened:
+http://127.0.0.1:5000
+But your code ONLY has:
+@app.route('/students', methods=['GET'])
+👉 That means:
+
+
+/ ❌ → NOT defined → gives 404
+
+
+/students ✅ → correct route
+
+
+
+✅ Correct URL (VERY IMPORTANT)
+Open this:
+http://127.0.0.1:5000/students
+
+🧪 Expected output
+[]
+👉 Empty list (no students yet)
+
+➕ Now test POST (add student)
+Use PowerShell:
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students" -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"name":"Alice","roll":"CS001"}'
+
+🔁 Then check again in browser
+http://127.0.0.1:5000/students
+Output:
+[  {"id":1,"name":"Alice","roll":"CS001"}]
+
+🧠 Why this happened
+URLResult/404 ❌/studentsworks ✅
+👉 Because Flask only responds to defined routes
+
+🚀 Optional (make / work too)
+If you want homepage to work, add this:
+@app.route('/')def home():    return "Student API Running"
+
+🎯 Final status
+✔ Flask app running
+✔ No Docker conflict
+✔ API working
+✔ 404 understood
+👉 Your experiment is now SUCCESSFUL
+
+🎓 What to say in exam
+
+“The application exposes REST endpoints under /students. Accessing / returns 404 since no route is defined.”
+
+
+If you want next:
+✅ Microservices version (very important next step)
+✅ Kubernetes deployment
+✅ Viva questions
+Just tell 👍You’re basically done—the app is running and your GET works 👍
+That red error is just how PowerShell handles the command, not a problem with your Flask app.
+
+✅ What is already correct
+From your screenshots:
+
+
+✔ Flask running → Running on http://127.0.0.1:5000
+
+
+✔ GET works → /students → []
+
+
+✔ Server responding → 200 OK
+
+
+👉 So your backend is PERFECT
+
+❗ Why POST failed (Unable to connect)
+You ran the POST after the terminal got reused / interrupted
+👉 Important rule:
+
+
+When Flask is running, that terminal is BUSY
+
+
+You cannot safely run PowerShell commands in same session
+
+
+
+🔥 FIX (Correct workflow)
+
+🟢 Step 1 — Keep Flask running (DON’T touch this terminal)
+python app.py
+Leave it like:
+Running on http://127.0.0.1:5000
+
+🟢 Step 2 — Open NEW terminal
+👉 In Visual Studio Code:
+
+
+Click + (new terminal)
+
+
+
+🟢 Step 3 — Run POST in NEW terminal
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/students" -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"name":"Alice","roll":"CS001"}'
+
+🟢 Step 4 — Check in browser
+http://127.0.0.1:5000/students
+Output:
+[  {"id":1,"name":"Alice","roll":"CS001"}]
+
+🧠 Why this error happened
+👉 PowerShell + Flask in same terminal = conflict
+TerminalRoleTerminal 1Running Flask serverTerminal 2Sending requests
+
+🚀 EVEN EASIER (no PowerShell issues)
+Use Git Bash:
+curl -X POST http://localhost:5000/students -H "Content-Type: application/json" -d '{"name":"Alice","roll":"CS001"}'
+
+🎯 Final status
+✔ App running
+✔ API working
+✔ GET working
+✔ POST will work in new terminal
+👉 Your experiment is SUCCESSFUL
+
+🎓 What to say in exam
+
+“The Flask server runs continuously, and API requests are sent from a separate terminal to avoid execution conflicts.”
+
+
+---------------------------------------------------------------------------
+
+
+
+
+
+Q 03
+
+Develop and demonstrate a simple monolithic application model using Python or Flask.
+Python Flask
+
+📖A monolithic app bundles all features — UI, business logic, and data — into a single deployable unit. Below is a Student CRUD REST API in Flask.
+
+app.py – Complete monolithic app
+
+pythoncopy
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+students = {}
+next_id = 1
+
+@app.route('/students', methods=['GET'])
+def get_students():
+    return jsonify(list(students.values()))
+
+@app.route('/students', methods=['POST'])
+def add_student():
+    global next_id
+    data = request.get_json()
+    student = {'id': next_id, 'name': data['name'], 'roll': data['roll']}
+    students[next_id] = student
+    next_id += 1
+    return jsonify(student), 201
+
+@app.route('/students/<int:sid>', methods=['DELETE'])
+def delete_student(sid):
+    students.pop(sid, None)
+    return jsonify({'msg': 'Deleted'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+Run & test with curl
+
+bashcopy
+pip install flask
+python app.py
+
+# Add a student
+curl -X POST http://localhost:5000/students \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice","roll":"CS001"}'
+
+# List all students
+curl http://localhost:5000/students
