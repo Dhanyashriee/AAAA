@@ -1,0 +1,269 @@
+🐳 Q02 — Dockerise Flask App & Push to Docker Hub
+🎯 Goal
+Run a Flask app inside Docker
+Access it in browser
+Push image to Docker Hub
+🧩 Step 0 — Prerequisites (don’t skip)
+
+Install:
+
+Docker Desktop
+
+After install:
+
+docker --version
+
+✔ Should show version (means Docker is working)
+
+📁 Step 1 — Create project folder
+mkdir flask-docker-app
+cd flask-docker-app
+🧾 Step 2 — Create files
+
+Create 3 files inside folder:
+
+🔹 1. app.py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello from Dockerised Flask!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+🔹 2. requirements.txt
+flask
+🔹 3. Dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+🧠 What Dockerfile does (important for viva)
+FROM → base image
+WORKDIR → working folder inside container
+COPY → copy files
+RUN → install dependencies
+EXPOSE → open port
+CMD → run app
+🏗️ Step 3 — Build Docker Image
+docker build -t <your-username>/flask-app:latest .
+
+👉 Example:
+
+docker build -t dhanyashriee/flask-app:latest .
+
+✔ This creates your image
+
+▶️ Step 4 — Run container
+docker run -d -p 5000:5000 dhanyashriee/flask-app:latest
+
+✔ -p 5000:5000 → maps container port to your system
+
+🌐 Step 5 — Check output
+
+Open browser:
+
+http://localhost:5000
+
+You should see:
+
+Hello from Dockerised Flask!
+📦 Step 6 — Push to Docker Hub
+🔐 Login
+docker login
+
+Enter:
+
+username
+password
+⬆️ Push image
+docker push dhanyashriee/flask-app:latest
+🎉 Final Output
+
+✔ Browser shows:
+
+Hello from Dockerised Flask!
+
+✔ Image visible on Docker Hub
+
+
+
+-----------------------------------------------------------------------------------
+You’ve already done the hard part perfectly 👍 — your push succeeded, so your image is already on Docker Hub. Now you just need to view it in the browser.
+
+🌐 How to see your image on Docker Hub
+🟢 Step 1 — Open Docker Hub
+Go to:
+👉 https://hub.docker.com
+(or click Sign in)
+
+🟢 Step 2 — Login
+Use your account:
+
+
+Username: dhanyashriee
+
+
+
+🟢 Step 3 — Go to your profile
+Click your profile → Repositories
+👉 Direct link:
+https://hub.docker.com/repositories/dhanyashriee
+
+🟢 Step 4 — Find your image
+You should see:
+👉 flask-app
+Click it.
+
+🟢 Step 5 — Verify image
+Inside the repo, you’ll see:
+
+
+Tag: latest
+
+
+Size
+
+
+Pull command:
+
+
+docker pull dhanyashriee/flask-app:latest
+
+✅ What confirms success
+✔ Repository exists
+✔ Tag latest is shown
+✔ You can see push timestamp
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+how to view the image
+
+✅ What your screenshot confirms
+
+On Docker Hub you can clearly see:
+
+Repository: dhanyashriee/flask-app ✔
+Tag: latest ✔
+Last pushed: 5 minutes ago ✔
+Size: ~49 MB ✔
+
+👉 This means:
+✔ Image built successfully
+✔ Image pushed successfully
+✔ Image stored on Docker Hub
+
+🧠 What each thing means (important for viva)
+🔹 latest tag
+
+👉 Default version of your image
+
+🔹 Digest (bc17b09ce4f0…)
+
+👉 Unique ID of your image (like fingerprint)
+
+🔹 OS/ARCH = linux/amd64
+
+👉 Your container runs on Linux architecture
+
+🎯 Final Output (write this in record)
+
+Output:
+
+Flask app successfully containerised using Docker
+
+Application accessible at:
+
+http://localhost:5000
+Docker image successfully pushed to Docker Hub
+Repository: dhanyashriee/flask-app with tag latest
+🚀 Extra (bonus marks tip)
+
+You can add this line in record:
+
+👉 Pull command:
+
+docker pull dhanyashriee/flask-app:latest
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------
+
+Q 02
+
+Containerise a Flask application using Docker and deploy the image to Docker Hub.
+Docker Flask Docker Hub
+
+
+app.py
+
+pythoncopy
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello from Dockerised Flask!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+requirements.txt
+
+textcopy
+flask
+
+Dockerfile
+
+dockerfilecopy
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+Build, run & push to Docker Hub
+
+bashcopy
+# Build
+docker build -t <dockerhub-username>/flask-app:latest .
+
+# Test locally → visit http://localhost:5000
+docker run -d -p 5000:5000 <dockerhub-username>/flask-app:latest
+
+# Login and push
+docker login
+docker push <dockerhub-username>/flask-app:latest
+Expected Output
+✅Browser shows Hello from Dockerised Flask! — Image visible on Docker Hub under your repository.
